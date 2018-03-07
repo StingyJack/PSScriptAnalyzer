@@ -461,7 +461,7 @@ namespace Microsoft.Windows.PowerShell.ScriptAnalyzer.Commands
 
                 if (ReportSummary.IsPresent)
                 {
-                    Host.UI.WriteLine($"{DiagnosticSeverity.Error} : {errorCount} \t {DiagnosticSeverity.Warning} : {warningCount} \t {DiagnosticSeverity.Information} : {infoCount}");
+                    Host.UI.WriteLine($"{Path ?? "ScriptBlock"}; {DiagnosticSeverity.Error} : {errorCount} \t {DiagnosticSeverity.Warning} : {warningCount} \t {DiagnosticSeverity.Information} : {infoCount}");
                 }
             }
 
