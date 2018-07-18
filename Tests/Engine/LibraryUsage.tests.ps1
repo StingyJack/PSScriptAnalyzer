@@ -1,9 +1,8 @@
 $directory = Split-Path -Parent $MyInvocation.MyCommand.Path
 $testRootDirectory = Split-Path -Parent $directory
 Import-Module (Join-Path $testRootDirectory 'PSScriptAnalyzerTestHelper.psm1')
-Import-Module PSScriptAnalyzer
 
-# test is meant to verify functionality if chsarp apis are used. Hence not if psedition is CoreCLR
+# test is meant to verify functionality if csharp apis are used. Hence not if psedition is CoreCLR
 if ((Test-PSEditionCoreCLR))
 {
 	return
@@ -52,10 +51,13 @@ function Invoke-ScriptAnalyzer {
 
         [Parameter(Mandatory = $false)]
         [switch] $Fix,
+
+        [Parameter(Mandatory = $false)]
+        [switch] $EnableExit,
 		
         [Parameter(Mandatory = $false)]
-        [switch] $EnableExit
-	)	
+        [switch] $ReportSummary
+    )
 
     if ($null -eq $CustomRulePath)
     {
@@ -98,6 +100,19 @@ function Invoke-ScriptAnalyzer {
 	}
 	
 	$results
+
+    if ($ReportSummary.IsPresent)
+    {
+        if ($null -ne $results)
+        {
+			 # This is not the exact message that it would print but close enough
+            Write-Host "$($results.Count) rule violations found.    Severity distribution:  Error = 1, Warning = 3, Information  = 5" -ForegroundColor Red
+        }
+        else
+        {
+            Write-Host '0 rule violations found.' -ForegroundColor Green
+        }
+    }
 	
     if ($EnableExit.IsPresent -and $null -ne $results)
     {

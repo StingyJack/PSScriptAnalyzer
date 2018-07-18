@@ -1,15 +1,5 @@
-﻿
-//
-// Copyright (c) Microsoft Corporation.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-//
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
 
 using System.Text.RegularExpressions;
 using Microsoft.Windows.PowerShell.ScriptAnalyzer.Generic;
@@ -1141,7 +1131,7 @@ namespace Microsoft.Windows.PowerShell.ScriptAnalyzer
                             {
                                 dynamic description = helpContent[0].Properties["Description"];
 
-                                if (null != description && null != description.Value && description.Value.GetType().IsArray)
+                                if (description != null && description.Value != null && description.Value.GetType().IsArray)
                                 {
                                     desc = description.Value[0].Text;
                                 }
@@ -1277,6 +1267,7 @@ namespace Microsoft.Windows.PowerShell.ScriptAnalyzer
                             IScriptExtent extent;
                             string message = string.Empty;
                             string ruleName = string.Empty;
+                            IEnumerable<CorrectionExtent> suggestedCorrections;
 
                             if (psobject != null && psobject.ImmediateBaseObject != null)
                             {
@@ -1296,6 +1287,7 @@ namespace Microsoft.Windows.PowerShell.ScriptAnalyzer
                                     message = psobject.Properties["Message"].Value.ToString();
                                     extent = (IScriptExtent)psobject.Properties["Extent"].Value;
                                     ruleName = psobject.Properties["RuleName"].Value.ToString();
+                                    suggestedCorrections = (IEnumerable<CorrectionExtent>)psobject.Properties["SuggestedCorrections"].Value;
                                 }
                                 catch (Exception ex)
                                 {
@@ -1305,7 +1297,7 @@ namespace Microsoft.Windows.PowerShell.ScriptAnalyzer
 
                                 if (!string.IsNullOrEmpty(message))
                                 {
-                                    diagnostics.Add(new DiagnosticRecord(message, extent, ruleName, severity, filePath));
+                                    diagnostics.Add(new DiagnosticRecord(message, extent, ruleName, severity, filePath) { SuggestedCorrections = suggestedCorrections });
                                 }
                             }
                         }
@@ -1532,16 +1524,18 @@ namespace Microsoft.Windows.PowerShell.ScriptAnalyzer
                 return null;
             }
 
-            if (errors != null && errors.Length > 0)
+            var relevantParseErrors = RemoveTypeNotFoundParseErrors(errors, out List<DiagnosticRecord> diagnosticRecords);
+
+            if (relevantParseErrors != null && relevantParseErrors.Count > 0)
             {
-                foreach (ParseError error in errors)
+                foreach (var parseError in relevantParseErrors)
                 {
-                    string parseErrorMessage = String.Format(CultureInfo.CurrentCulture, Strings.ParseErrorFormatForScriptDefinition, error.Message.TrimEnd('.'), error.Extent.StartLineNumber, error.Extent.StartColumnNumber);
-                    this.outputWriter.WriteError(new ErrorRecord(new ParseException(parseErrorMessage), parseErrorMessage, ErrorCategory.ParserError, error.ErrorId));
+                    string parseErrorMessage = String.Format(CultureInfo.CurrentCulture, Strings.ParseErrorFormatForScriptDefinition, parseError.Message.TrimEnd('.'), parseError.Extent.StartLineNumber, parseError.Extent.StartColumnNumber);
+                    this.outputWriter.WriteError(new ErrorRecord(new ParseException(parseErrorMessage), parseErrorMessage, ErrorCategory.ParserError, parseError.ErrorId));
                 }
             }
 
-            if (errors != null && errors.Length > 10)
+            if (relevantParseErrors != null && relevantParseErrors.Count > 10)
             {
                 string manyParseErrorMessage = String.Format(CultureInfo.CurrentCulture, Strings.ParserErrorMessageForScriptDefinition);
                 this.outputWriter.WriteError(new ErrorRecord(new ParseException(manyParseErrorMessage), manyParseErrorMessage, ErrorCategory.ParserError, scriptDefinition));
@@ -1549,7 +1543,7 @@ namespace Microsoft.Windows.PowerShell.ScriptAnalyzer
                 return new List<DiagnosticRecord>();
             }
 
-            return this.AnalyzeSyntaxTree(scriptAst, scriptTokens, String.Empty);
+            return diagnosticRecords.Concat(this.AnalyzeSyntaxTree(scriptAst, scriptTokens, String.Empty));
         }
 
         /// <summary>
@@ -1652,6 +1646,33 @@ namespace Microsoft.Windows.PowerShell.ScriptAnalyzer
                     return reader.CurrentEncoding;
                 }
             }
+        }
+
+        /// <summary>
+        /// Inspects Parse errors and removes TypeNotFound errors that can be ignored since some types are not known yet (e.g. due to 'using' statements).
+        /// </summary>
+        /// <param name="parseErrors"></param>
+        /// <returns>List of relevant parse errors.</returns>
+        private List<ParseError> RemoveTypeNotFoundParseErrors(ParseError[] parseErrors, out List<DiagnosticRecord> diagnosticRecords)
+        {
+            var relevantParseErrors = new List<ParseError>();
+            diagnosticRecords = new List<DiagnosticRecord>();
+
+            foreach (var parseError in parseErrors)
+            {
+                // If types are not known due them not being imported yet, the parser throws an error that can be ignored
+                if (parseError.ErrorId != "TypeNotFound")
+                {
+                    relevantParseErrors.Add(parseError);
+                }
+                else
+                {
+                    diagnosticRecords.Add(new DiagnosticRecord(
+                        string.Format(Strings.TypeNotFoundParseErrorFound, parseError.Extent), parseError.Extent, "TypeNotFound", DiagnosticSeverity.Information, parseError.Extent.File));
+                }
+            }
+
+            return relevantParseErrors;
         }
 
         private static Range SnapToEdges(EditableText text, Range range)
@@ -1816,6 +1837,7 @@ namespace Microsoft.Windows.PowerShell.ScriptAnalyzer
             ParseError[] errors = null;
 
             this.outputWriter.WriteVerbose(string.Format(CultureInfo.CurrentCulture, Strings.VerboseFileMessage, filePath));
+            var diagnosticRecords = new List<DiagnosticRecord>();
 
             //Parse the file
             if (File.Exists(filePath))
@@ -1839,17 +1861,19 @@ namespace Microsoft.Windows.PowerShell.ScriptAnalyzer
                         scriptAst = Parser.ParseFile(filePath, out scriptTokens, out errors);
                     }
 #endif //!PSV3
+                    var relevantParseErrors = RemoveTypeNotFoundParseErrors(errors, out diagnosticRecords);
+
                     //Runspace.DefaultRunspace = oldDefault;
-                    if (errors != null && errors.Length > 0)
+                    if (relevantParseErrors != null && relevantParseErrors.Count > 0)
                     {
-                        foreach (ParseError error in errors)
+                        foreach (var parseError in relevantParseErrors)
                         {
-                            string parseErrorMessage = String.Format(CultureInfo.CurrentCulture, Strings.ParserErrorFormat, error.Extent.File, error.Message.TrimEnd('.'), error.Extent.StartLineNumber, error.Extent.StartColumnNumber);
-                            this.outputWriter.WriteError(new ErrorRecord(new ParseException(parseErrorMessage), parseErrorMessage, ErrorCategory.ParserError, error.ErrorId));
+                            string parseErrorMessage = String.Format(CultureInfo.CurrentCulture, Strings.ParserErrorFormat, parseError.Extent.File, parseError.Message.TrimEnd('.'), parseError.Extent.StartLineNumber, parseError.Extent.StartColumnNumber);
+                            this.outputWriter.WriteError(new ErrorRecord(new ParseException(parseErrorMessage), parseErrorMessage, ErrorCategory.ParserError, parseError.ErrorId));
                         }
                     }
 
-                    if (errors != null && errors.Length > 10)
+                    if (relevantParseErrors != null && relevantParseErrors.Count > 10)
                     {
                         string manyParseErrorMessage = String.Format(CultureInfo.CurrentCulture, Strings.ParserErrorMessage, System.IO.Path.GetFileName(filePath));
                         this.outputWriter.WriteError(new ErrorRecord(new ParseException(manyParseErrorMessage), manyParseErrorMessage, ErrorCategory.ParserError, filePath));
@@ -1866,7 +1890,7 @@ namespace Microsoft.Windows.PowerShell.ScriptAnalyzer
                 return null;
             }
 
-            return this.AnalyzeSyntaxTree(scriptAst, scriptTokens, filePath);
+            return diagnosticRecords.Concat(this.AnalyzeSyntaxTree(scriptAst, scriptTokens, filePath));
         }
 
         private bool IsModuleNotFoundError(ParseError error)

@@ -11,8 +11,8 @@
 namespace Microsoft.Windows.PowerShell.ScriptAnalyzer {
     using System;
     using System.Reflection;
-
-
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -94,6 +94,60 @@ namespace Microsoft.Windows.PowerShell.ScriptAnalyzer {
         internal static string AlignAssignmentStatementName {
             get {
                 return ResourceManager.GetString("AlignAssignmentStatementName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AvoidAssignmentToAutomaticVariable.
+        /// </summary>
+        internal static string AvoidAssignmentToAutomaticVariableName {
+            get {
+                return ResourceManager.GetString("AvoidAssignmentToAutomaticVariableName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use a different variable name.
+        /// </summary>
+        internal static string AvoidAssignmentToReadOnlyAutomaticVariable {
+            get {
+                return ResourceManager.GetString("AvoidAssignmentToReadOnlyAutomaticVariable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Changing automtic variables might have undesired side effects.
+        /// </summary>
+        internal static string AvoidAssignmentToReadOnlyAutomaticVariableCommonName {
+            get {
+                return ResourceManager.GetString("AvoidAssignmentToReadOnlyAutomaticVariableCommonName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This automatic variables is built into PowerShell and readonly..
+        /// </summary>
+        internal static string AvoidAssignmentToReadOnlyAutomaticVariableDescription {
+            get {
+                return ResourceManager.GetString("AvoidAssignmentToReadOnlyAutomaticVariableDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Variable &apos;{0}&apos; cannot be assigned since it is a readonly automatic variable that is built into PowerShell, please use a different name..
+        /// </summary>
+        internal static string AvoidAssignmentToReadOnlyAutomaticVariableError {
+            get {
+                return ResourceManager.GetString("AvoidAssignmentToReadOnlyAutomaticVariableError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Starting from PowerShell 6.0, the Variable &apos;{0}&apos; cannot be assigned any more since it is a readonly automatic variable that is built into PowerShell, please use a different name..
+        /// </summary>
+        internal static string AvoidAssignmentToReadOnlyAutomaticVariableIntroducedInPowerShell6_0Error {
+            get {
+                return ResourceManager.GetString("AvoidAssignmentToReadOnlyAutomaticVariableIntroducedInPowerShell6_0Error", resourceCulture);
             }
         }
         
@@ -483,79 +537,7 @@ namespace Microsoft.Windows.PowerShell.ScriptAnalyzer {
                 return ResourceManager.GetString("AvoidTrailingWhitespaceName", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to No traps in the script..
-        /// </summary>
-        internal static string AvoidTrapStatementCommonName {
-            get {
-                return ResourceManager.GetString("AvoidTrapStatementCommonName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Avoid using Traps in the script..
-        /// </summary>
-        internal static string AvoidTrapStatementDescription {
-            get {
-                return ResourceManager.GetString("AvoidTrapStatementDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Trap found..
-        /// </summary>
-        internal static string AvoidTrapStatementError {
-            get {
-                return ResourceManager.GetString("AvoidTrapStatementError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to AvoidTrapStatement.
-        /// </summary>
-        internal static string AvoidTrapStatementName {
-            get {
-                return ResourceManager.GetString("AvoidTrapStatementName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Initializing non-global variables.
-        /// </summary>
-        internal static string AvoidUninitializedVariableCommonName {
-            get {
-                return ResourceManager.GetString("AvoidUninitializedVariableCommonName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Non-global variables must be initialized. To fix a violation of this rule, please initialize non-global variables..
-        /// </summary>
-        internal static string AvoidUninitializedVariableDescription {
-            get {
-                return ResourceManager.GetString("AvoidUninitializedVariableDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Variable &apos;{0}&apos; is not initialized. Non-global variables must be initialized. To fix a violation of this rule, please initialize non-global variables..
-        /// </summary>
-        internal static string AvoidUninitializedVariableError {
-            get {
-                return ResourceManager.GetString("AvoidUninitializedVariableError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to AvoidUninitializedVariable.
-        /// </summary>
-        internal static string AvoidUninitializedVariableName {
-            get {
-                return ResourceManager.GetString("AvoidUninitializedVariableName", resourceCulture);
-            }
-        }
-        
+                
         /// <summary>
         ///   Looks up a localized string similar to Module Must Be Loadable.
         /// </summary>
@@ -665,7 +647,7 @@ namespace Microsoft.Windows.PowerShell.ScriptAnalyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Avoid Using Cmdlet Aliases.
+        ///   Looks up a localized string similar to Avoid Using Cmdlet Aliases or omitting the &apos;Get-&apos; prefix..
         /// </summary>
         internal static string AvoidUsingCmdletAliasesCommonName {
             get {
@@ -683,7 +665,7 @@ namespace Microsoft.Windows.PowerShell.ScriptAnalyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An alias is an alternate name or nickname for a cmdlet or for a command element, such as a function, script, file, or executable file. But when writing scripts that will potentially need to be maintained over time, either by the original author or another Windows PowerShell scripter, please consider using full cmdlet name instead of alias. Aliases can introduce these problems, readability, understandability and availability..
+        ///   Looks up a localized string similar to An alias is an alternate name or nickname for a cmdlet or for a command element, such as a function, script, file, or executable file. An implicit alias is also the omission of the &apos;Get-&apos; prefix for commands with this prefix. But when writing scripts that will potentially need to be maintained over time, either by the original author or another Windows PowerShell scripter, please consider using full cmdlet name instead of alias. Aliases can introduce these problems, readability, understandability and availa [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string AvoidUsingCmdletAliasesDescription {
             get {
@@ -697,6 +679,15 @@ namespace Microsoft.Windows.PowerShell.ScriptAnalyzer {
         internal static string AvoidUsingCmdletAliasesError {
             get {
                 return ResourceManager.GetString("AvoidUsingCmdletAliasesError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; is implicitly aliasing &apos;{1}&apos; because it is missing the &apos;Get-&apos; prefix. This can introduce possible problems and make scripts hard to maintain. Please consider changing command to its full name..
+        /// </summary>
+        internal static string AvoidUsingCmdletAliasesMissingGetPrefixError {
+            get {
+                return ResourceManager.GetString("AvoidUsingCmdletAliasesMissingGetPrefixError", resourceCulture);
             }
         }
         
@@ -816,43 +807,7 @@ namespace Microsoft.Windows.PowerShell.ScriptAnalyzer {
                 return ResourceManager.GetString("AvoidUsingEmptyCatchBlockName", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Avoid Using File Path.
-        /// </summary>
-        internal static string AvoidUsingFilePathCommonName {
-            get {
-                return ResourceManager.GetString("AvoidUsingFilePathCommonName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to If a rooted file path is used in a script that is published online, this may expose information about your computer. Furthermore, the file path may not work on other computer when they try to use the script..
-        /// </summary>
-        internal static string AvoidUsingFilePathDescription {
-            get {
-                return ResourceManager.GetString("AvoidUsingFilePathDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The file path &apos;{0}&apos; of &apos;{1}&apos; is rooted. This should be avoided if &apos;{1}&apos; is published online..
-        /// </summary>
-        internal static string AvoidUsingFilePathError {
-            get {
-                return ResourceManager.GetString("AvoidUsingFilePathError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to AvoidUsingFilePath.
-        /// </summary>
-        internal static string AvoidUsingFilePathName {
-            get {
-                return ResourceManager.GetString("AvoidUsingFilePathName", resourceCulture);
-            }
-        }
-        
+                
         /// <summary>
         ///   Looks up a localized string similar to Avoid Using Internal URLs.
         /// </summary>
@@ -1534,6 +1489,78 @@ namespace Microsoft.Windows.PowerShell.ScriptAnalyzer {
         internal static string PossibleIncorrectComparisonWithNullName {
             get {
                 return ResourceManager.GetString("PossibleIncorrectComparisonWithNullName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;=&apos; is not an assignment operator. Did you mean the equality operator &apos;-eq&apos;?.
+        /// </summary>
+        internal static string PossibleIncorrectUsageOfAssignmentOperatorCommonName {
+            get {
+                return ResourceManager.GetString("PossibleIncorrectUsageOfAssignmentOperatorCommonName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;=&apos; or &apos;==&apos; are not comparison operators in the PowerShell language and rarely needed inside conditional statements..
+        /// </summary>
+        internal static string PossibleIncorrectUsageOfAssignmentOperatorDescription {
+            get {
+                return ResourceManager.GetString("PossibleIncorrectUsageOfAssignmentOperatorDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Did you mean to use the assignment operator &apos;=&apos;? The equality operator in PowerShell is &apos;eq&apos;..
+        /// </summary>
+        internal static string PossibleIncorrectUsageOfAssignmentOperatorError {
+            get {
+                return ResourceManager.GetString("PossibleIncorrectUsageOfAssignmentOperatorError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PossibleIncorrectUsageOfAssignmentOperator.
+        /// </summary>
+        internal static string PossibleIncorrectUsageOfAssignmentOperatorName {
+            get {
+                return ResourceManager.GetString("PossibleIncorrectUsageOfAssignmentOperatorName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;&gt;&apos; is not a comparison operator. Use  &apos;-gt&apos; (greater than) or &apos;-ge&apos; (greater or equal)..
+        /// </summary>
+        internal static string PossibleIncorrectUsageOfRedirectionOperatorCommonName {
+            get {
+                return ResourceManager.GetString("PossibleIncorrectUsageOfRedirectionOperatorCommonName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When switching between different languages it is easy to forget that &apos;&gt;&apos; does not mean &apos;great than&apos; in PowerShell..
+        /// </summary>
+        internal static string PossibleIncorrectUsageOfRedirectionOperatorDescription {
+            get {
+                return ResourceManager.GetString("PossibleIncorrectUsageOfRedirectionOperatorDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Did you mean to use the redirection operator &apos;&gt;&apos;? The comparison operators in PowerShell are &apos;-gt&apos; (greater than) or &apos;-ge&apos; (greater or equal)..
+        /// </summary>
+        internal static string PossibleIncorrectUsageOfRedirectionOperatorError {
+            get {
+                return ResourceManager.GetString("PossibleIncorrectUsageOfRedirectionOperatorError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PossibleIncorrectUsageOfRedirectionOperator.
+        /// </summary>
+        internal static string PossibleIncorrectUsageOfRedirectionOperatorName {
+            get {
+                return ResourceManager.GetString("PossibleIncorrectUsageOfRedirectionOperatorName", resourceCulture);
             }
         }
         
@@ -2366,7 +2393,7 @@ namespace Microsoft.Windows.PowerShell.ScriptAnalyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Function '{0}' has verb that could change system state. Therefore, the function has to support &apos;ShouldProcess&apos;..
+        ///   Looks up a localized string similar to Function &apos;{0}&apos; has verb that could change system state. Therefore, the function has to support &apos;ShouldProcess&apos;..
         /// </summary>
         internal static string UseShouldProcessForStateChangingFunctionsError {
             get {
@@ -2636,7 +2663,7 @@ namespace Microsoft.Windows.PowerShell.ScriptAnalyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to There is no call to Write-Verbose in DSC function '{0}'. If you are using Write-Verbose in a helper function, suppress this rule application..
+        ///   Looks up a localized string similar to There is no call to Write-Verbose in DSC function &apos;{0}&apos;. If you are using Write-Verbose in a helper function, suppress this rule application..
         /// </summary>
         internal static string UseVerboseMessageInDSCResourceErrorFunction {
             get {

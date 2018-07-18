@@ -10,7 +10,6 @@
 
 namespace Microsoft.Windows.PowerShell.ScriptAnalyzer {
     using System;
-    using System.Reflection;
     
     
     /// <summary>
@@ -40,7 +39,7 @@ namespace Microsoft.Windows.PowerShell.ScriptAnalyzer {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.Windows.PowerShell.ScriptAnalyzer.Strings", typeof(Strings).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.Windows.PowerShell.ScriptAnalyzer.Strings", typeof(Strings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -458,7 +457,7 @@ namespace Microsoft.Windows.PowerShell.ScriptAnalyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cannot find a settings file..
+        ///   Looks up a localized string similar to Cannot resolve settings file path &apos;{0}&apos;..
         /// </summary>
         internal static string SettingsCannotFindFile {
             get {
@@ -508,6 +507,15 @@ namespace Microsoft.Windows.PowerShell.ScriptAnalyzer {
         internal static string SettingsNotProvided {
             get {
                 return ResourceManager.GetString("SettingsNotProvided", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings object could not be resolved..
+        /// </summary>
+        internal static string SettingsObjectCouldNotBResolved {
+            get {
+                return ResourceManager.GetString("SettingsObjectCouldNotBResolved", resourceCulture);
             }
         }
         
@@ -580,6 +588,15 @@ namespace Microsoft.Windows.PowerShell.ScriptAnalyzer {
         internal static string TextLinesNoNullItem {
             get {
                 return ResourceManager.GetString("TextLinesNoNullItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ignoring &apos;TypeNotFound&apos; parse error on type &apos;{0}&apos;. Check if the specified type is correct. This can also be due the type not being known at parse time due to types imported by &apos;using&apos; statements..
+        /// </summary>
+        internal static string TypeNotFoundParseErrorFound {
+            get {
+                return ResourceManager.GetString("TypeNotFoundParseErrorFound", resourceCulture);
             }
         }
         
